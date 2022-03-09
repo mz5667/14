@@ -1,6 +1,6 @@
 package panels;
 
-import app.Button;
+import controls.Button;
 import app.Point;
 import app.Task;
 import controls.Input;
