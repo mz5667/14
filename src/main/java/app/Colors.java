@@ -65,6 +65,10 @@ public class Colors {
      * Цвет фона
      */
     public static final int HELP_TEXT_BACKGROUND = Misc.getColor(50, 0, 0, 0);
+    /**
+     * Цвет заливки панели
+     */
+    public static final int DIALOG_BACKGROUND_COLOR = Misc.getColor(230, 70, 38, 83);
 
 
     /**
