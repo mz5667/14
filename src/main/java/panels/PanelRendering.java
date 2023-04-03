@@ -2,6 +2,7 @@ package panels;
 
 import app.Task;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dialogs.PanelSelectFile;
 import io.github.humbleui.jwm.Event;
 import io.github.humbleui.jwm.EventMouseButton;
 import io.github.humbleui.jwm.EventMouseScroll;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static app.Fonts.FONT12;
+import static com.sun.tools.jdeprscan.DeprDB.loadFromFile;
 
 
 /**
@@ -103,40 +105,34 @@ public class PanelRendering extends GridPanel {
      * Сохранить файл
      */
     public static void save() {
-        String path = "src/main/resources/conf.json";
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.writeValue(new File(path), task);
-            PanelLog.success("Файл " + path + " успешно сохранён");
-        } catch (IOException e) {
-            PanelLog.error("не получилось записать файл \n" + e);
-        }
+        PanelSelectFile.show("Выберите файл", path -> {
+            if (!path.isEmpty()) {
+                try {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    objectMapper.writeValue(new File(path), task);
+                    PanelLog.success("Файл " + path + " успешно сохранён");
+                } catch (IOException e) {
+                    PanelLog.error("не получилось записать файл \n" + e);
+                }
+            }
+        });
     }
 
-    /**
-     * Загружаем из файла
-     *
-     * @param path путь к файлу
-     */
-    public static void loadFromFile(String path) {
-        // создаём загрузчик JSON
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            // считываем систему координат
-            task = objectMapper.readValue(new File(path), Task.class);
-            PanelLog.success("Файл " + path + " успешно загружен");
-        } catch (IOException e) {
-            PanelLog.error("Не получилось прочитать файл " + path + "\n" + e);
-        }
-    }
 
     /**
      * Загрузить файл
      */
     public static void load() {
-        String path = "src/main/resources/conf.json";
-        PanelLog.info("load from " + path);
-        loadFromFile(path);
+        PanelSelectFile.show("Выберите файл", s -> {
+            if (!s.isEmpty()) {
+                PanelLog.info("load from " + s);
+                try {
+                    loadFromFile(s);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 
 
